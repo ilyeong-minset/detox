@@ -1,0 +1,6 @@
+torch>=1.6.0
+torchtext>=0.7.0
+transformers>=3.0.2
+pytorch-ignite>=0.4.1
+koco>=0.2.3
+omegaconf>=2.0.0
