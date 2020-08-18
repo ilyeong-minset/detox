@@ -11,16 +11,15 @@ from transformers import BertForSequenceClassification
 from utils import get_device_and_ngpus, makedirs
 
 logger = logging.getLogger(__name__)
-conf = OmegaConf.load("configs/detox.yaml")
 device, n_gpus = get_device_and_ngpus()
 result_dir = "results"
 makedirs(result_dir)
 
 
-def main(model_name, dev, save):
+def main(conf, dev, save):
     # Load saved data
-    checkpoint_path = f"{conf.checkpoint_dir}/{model_name}.pt"
-    log_path = f"{conf.log_dir}/{model_name}.log"
+    checkpoint_path = f"{conf.checkpoint_dir}/{conf.model_name}.pt"
+    log_path = f"{conf.log_dir}/{conf.model_name}.log"
     saved_model = torch.load(checkpoint_path, map_location=device)["model"]
     saved_data = torch.load(log_path, map_location=device)
     tokenizer = saved_data['tokenizer']
@@ -95,12 +94,12 @@ def main(model_name, dev, save):
     # Save!
     if save:
         # Save test comment + predicted label
-        with open(f"{result_dir}/{model_name}.predict", "w") as f:
+        with open(f"{result_dir}/{conf.model_name}.predict", "w") as f:
             f.write("comments" + "\t" + "prediction" + "\n")
             for test_text, index in zip(test_texts, indices):
                 f.write(test_text + "\t" + idx2label[int(index[0])] + "\n")
         # Save tokenized test comment + predicted label
-        with open(f"{result_dir}/{model_name}.tokens", "w") as f:
+        with open(f"{result_dir}/{conf.model_name}.tokens", "w") as f:
             f.write("tokens" + "\t" + "prediction" + "\n")
             for token, index in zip(tokens, indices):
                 f.write(' '.join(token) + "\t" + idx2label[int(index[0])] + "\n")
@@ -108,9 +107,10 @@ def main(model_name, dev, save):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-name", help="saved model name", required=True)
+    parser.add_argument("--config", help="Path of the config yaml", required=True)
     parser.add_argument("--dev", action="store_true")
     parser.add_argument("--save", action="store_true")
     args = parser.parse_args()
 
-    main(args.model_name, args.dev, args.save)
+    config = OmegaConf.load(args.config)
+    main(config, args.dev, args.save)
