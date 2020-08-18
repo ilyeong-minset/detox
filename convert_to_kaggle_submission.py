@@ -1,6 +1,7 @@
 import argparse
 
 import pandas as pd
+from omegaconf import OmegaConf
 
 from utils import makedirs
 
@@ -15,7 +16,8 @@ label2idx = {
 }
 
 
-def main(model_name):
+def main(config):
+    model_name = config.model_name
     result_path = f"{result_dir}/{model_name}.predict"
     result = pd.read_csv(result_path, sep="\t")
     result["label"] = result["prediction"].map(lambda x: label2idx[x])
@@ -24,7 +26,8 @@ def main(model_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-name", help="saved model name", required=True)
+    parser.add_argument("--config", help="Path to a config", required=True)
     args = parser.parse_args()
 
-    main(args.model_name)
+    config = OmegaConf.load(args.config)
+    main(config)
