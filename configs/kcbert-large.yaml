@@ -1,0 +1,24 @@
+model_name: kcbert_large
+
+# If both labels are true, this means bias is an additional context for predicting hate.
+label:
+    hate: True
+    bias: False
+
+pretrained_model: beomi/kcbert-large
+
+tokenizer:
+    register_names: False
+
+train_hparams:
+    seed: 42
+    batch_size: 32
+    n_epochs: 10
+    lr: 5e-5
+    warmup_ratio: 0.1
+    adam_epsilon: 1e-8
+    max_length: 100
+    verbose: True
+
+checkpoint_dir: checkpoints
+log_dir: logs

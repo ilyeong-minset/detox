@@ -1,0 +1,24 @@
+model_name: kobert-base_with_bias
+
+# If both labels are true, this means bias is an additional context for predicting hate.
+label:
+    hate: True
+    bias: True
+
+pretrained_model: monologg/kobert
+
+tokenizer:
+    register_names: False
+
+train_hparams:
+    seed: 42
+    batch_size: 32
+    n_epochs: 10
+    lr: 5e-5
+    warmup_ratio: 0.1
+    adam_epsilon: 1e-8
+    max_length: 120
+    verbose: 2  # 0: silent / 1: epoch wise / 2: batch wise
+
+checkpoint_dir: checkpoints
+log_dir: logs
