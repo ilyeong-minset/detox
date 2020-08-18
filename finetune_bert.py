@@ -5,6 +5,7 @@ Supports KcBERT, KoBERT
 import argparse
 
 import koco
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -16,16 +17,10 @@ from transformers import (
     BertForSequenceClassification,
     get_linear_schedule_with_warmup,
 )
-import pandas as pd
 
 from detox.bert_trainer import BertTrainer
-from detox.data_loader import KoreanHateSpeechDataset, KoreanHateSpeechCollator
-from utils import (
-    get_device_and_ngpus,
-    makedirs,
-    map_label2idx,
-    set_seeds,
-)
+from detox.data_loader import KoreanHateSpeechCollator, KoreanHateSpeechDataset
+from utils import get_device_and_ngpus, makedirs, map_label2idx, set_seeds
 
 device, n_gpus = get_device_and_ngpus()
 
@@ -42,26 +37,30 @@ def main(conf):
         else AutoTokenizer.from_pretrained(conf.pretrained_model)
     )
     if conf.tokenizer.register_names:
-        names = pd.read_csv('entertainement_biographical_db.tsv', sep='\t')['name_wo_parenthesis'].tolist()
+        names = pd.read_csv("entertainement_biographical_db.tsv", sep="\t")[
+            "name_wo_parenthesis"
+        ].tolist()
         tokenizer.add_tokens(names)
 
     # Mapping string y_label to integer label
     if conf.label.hate:
         train, label2idx = map_label2idx(train, "hate")
-        valid, _ = map_label2idx(valid, 'hate')
+        valid, _ = map_label2idx(valid, "hate")
     elif conf.label.bias:
-        train, label2idx = map_label2idx(train, 'bias')
-        valid, _ = map_label2idx(valid, 'bias')
+        train, label2idx = map_label2idx(train, "bias")
+        valid, _ = map_label2idx(valid, "bias")
 
     # Use bias as an additional context for predicting hate
     if conf.label.hate and conf.label.bias:
-        biases = ['gender', 'others', 'none']
-        tokenizer.add_tokens([f'<{label}>' for label in biases])
+        biases = ["gender", "others", "none"]
+        tokenizer.add_tokens([f"<{label}>" for label in biases])
 
     # Prepare DataLoader
     train_dataset = KoreanHateSpeechDataset(train)
     valid_dataset = KoreanHateSpeechDataset(valid)
-    collator = KoreanHateSpeechCollator(tokenizer, predict_hate_with_bias=(conf.label.hate and conf.label.bias))
+    collator = KoreanHateSpeechCollator(
+        tokenizer, predict_hate_with_bias=(conf.label.hate and conf.label.bias)
+    )
     train_loader = DataLoader(
         train_dataset,
         batch_size=conf.train_hparams.batch_size,
@@ -137,7 +136,9 @@ def main(conf):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', help='Config path', default='configs/detox.yaml', required=True)
+    parser.add_argument(
+        "--config", help="Config path", default="configs/detox.yaml", required=True
+    )
     args = parser.parse_args()
 
     conf = OmegaConf.load(args.config)

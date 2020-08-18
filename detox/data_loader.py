@@ -1,5 +1,5 @@
-from omegaconf import OmegaConf
 import torch
+from omegaconf import OmegaConf
 from torch.utils.data import Dataset
 
 conf = OmegaConf.load("configs/detox.yaml")
@@ -38,10 +38,15 @@ class KoreanHateSpeechDataset(Dataset):
             contexts (list): A list of news titles
         """
         self.texts = [koco["comments"] for koco in koco_dataset]
-        self.biases = [koco['bias'] for koco in koco_dataset]
-        self.label_indices = [koco['label_index'] for koco in koco_dataset]
+        self.biases = [koco["bias"] for koco in koco_dataset]
+        self.label_indices = [koco["label_index"] for koco in koco_dataset]
         self.contexts = [koco["news_title"] for koco in koco_dataset]
-        assert len(self.texts) == len(self.biases) == len(self.label_indices) == len(self.contexts)
+        assert (
+            len(self.texts)
+            == len(self.biases)
+            == len(self.label_indices)
+            == len(self.contexts)
+        )
 
     def __len__(self):
         return len(self.label_indices)
@@ -51,10 +56,15 @@ class KoreanHateSpeechDataset(Dataset):
         bias = self.biases[item]
         label_index = self.label_indices[item]
         context = self.contexts[item]
-        return {"text": text, 'bias': bias, 'label_index': label_index, "context": context}
+        return {
+            "text": text,
+            "bias": bias,
+            "label_index": label_index,
+            "context": context,
+        }
 
 
-class KoreanHateSpeechCollator():
+class KoreanHateSpeechCollator:
     """
     """
 
@@ -83,11 +93,11 @@ class KoreanHateSpeechCollator():
         """
         texts, label_indices = [], []
         for d in data:
-            text = d['text']
+            text = d["text"]
             if self.predict_hate_with_bias:
                 bias_context = f'<{d["bias"]}>'
-                text = f'{bias_context} {text}'
-            label_index = d['label_index']
+                text = f"{bias_context} {text}"
+            label_index = d["label_index"]
             texts.append(text)
             label_indices.append(label_index)
 

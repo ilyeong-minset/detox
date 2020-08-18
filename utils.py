@@ -27,7 +27,7 @@ def map_label2idx(koco_dataset, label_name, label2idx=None):
         labels = [d[label_name] for d in koco_dataset]
         label2idx = get_label2idx(labels)
 
-    index_name = 'label_index'
+    index_name = "label_index"
     for i, d in enumerate(koco_dataset):
         koco_dataset[i][index_name] = label2idx[d[label_name]]
     return koco_dataset, label2idx
