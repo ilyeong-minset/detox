@@ -1,5 +1,5 @@
 # DeToxify Korean Hate Speech
-Provides training and inferencing hatespeech detection model based on [`kocohub/korean-hate-speech` dataset](https://github.com/kocohub/korean-hate-speech). <br>
+Provides training and inferencing **hatespeech detection model** based on [`kocohub/korean-hate-speech` dataset](https://github.com/kocohub/korean-hate-speech). <br>
 Currently, only BERT-based finetuning model is supported.
 
 ## Prerequisite
@@ -17,7 +17,7 @@ $ python finetune_bert.py --config <config_path>
 $ python predict.py --config <config_path> [--save]
 ```
 
-## Submitting to Kaggle
+## Convert to Kaggle Submission format
 ```bash
 $ python convert_to_kaggle_submission.py --config <config_path>
 ```
