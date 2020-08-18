@@ -5,7 +5,9 @@ Currently, only BERT-based finetuning model is supported.
 ## Prerequisite
 ```bash
 $ pip install -r requirements.txt
+$ git lfs pull
 ```
+
 
 ## Train
 ```bash
