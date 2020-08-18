@@ -17,7 +17,7 @@ $ python finetune_bert.py --config <config_path>
 $ python predict.py --config <config_path> [--save]
 ```
 
-## Convert to Kaggle Submission format
+## Convert to Kaggle submission format
 ```bash
 $ python convert_to_kaggle_submission.py --config <config_path>
 ```
