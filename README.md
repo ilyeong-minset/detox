@@ -13,7 +13,7 @@ $ git lfs pull
 ```
 
 ## Usage
-### Detecting hate speech
+### 1. Detecting hate speech
 ```
 $ python predict.py --config <config_path> (--koco-test | --filepath <test_file_path>) [--save]
 ```
@@ -23,14 +23,14 @@ $ python predict.py --config <config_path> (--koco-test | --filepath <test_file_
   - `filepath` uses designated text file as an input. e.g., [`example/example.txt`](example/example.txt)
 - `save` is an optional argument. If supplied, predicted results are saved in `./results` directory.
 
-### Training hate speech detection model
+### 2. Training hate speech detection model
 `NOTE`: Currently, `detox` only supports BERT finetuning model. However, any contributions are welcome! :tada:
 ```
 $ python finetune_bert.py --config <config_path>
 ```
 - `config` specifies model configuration filepath. e.g., [`configs/kcbert-base.yaml`](configs/kcbert-base.yaml)
 
-### Convert to [Kaggle](https://www.kaggle.com/c/korean-hate-speech-detection) submission format
+### 3. Convert to [Kaggle](https://www.kaggle.com/c/korean-hate-speech-detection) submission format
 ```
 $ python convert_to_kaggle_submission.py --result-path <result_path>
 ```
