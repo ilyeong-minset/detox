@@ -58,10 +58,6 @@ def main(conf, testfile, save):
             test_text = f"{bias_context} {test_text}"
         test_texts.append(test_text)
 
-    #  test_texts = [t["comments"] for t in test]
-    #  test_texts = ['북극곰', '북극성', '기운을 북돋아주는 글이네요.', '북돋아줄게']
-    #  test_texts = ['이병헌', '전현무', '승리', '조민기']
-
     with torch.no_grad():
         # Declare model and load pre-trained weights
         model = BertForSequenceClassification.from_pretrained(
