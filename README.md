@@ -1,6 +1,6 @@
 # DeToxify Korean Hate Speech
-Provides training and inferencing **hatespeech detection model** based on [`kocohub/korean-hate-speech` dataset](https://github.com/kocohub/korean-hate-speech). <br>
-Currently, only BERT-based finetuning model is supported.
+Provides **hate speech detection model** trained on [`kocohub/korean-hate-speech` dataset](https://github.com/kocohub/korean-hate-speech). <br>
+Additionally, `detox` supports users to easily train their own model. Note that only finetuning BERT is provided, yet.
 
 ## Prerequisite
 - Python >= 3.6.9
