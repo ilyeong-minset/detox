@@ -1,7 +1,7 @@
 import argparse
+import os
 
 import pandas as pd
-from omegaconf import OmegaConf
 
 from utils import makedirs
 
@@ -16,18 +16,16 @@ label2idx = {
 }
 
 
-def main(config):
-    model_name = config.model_name
-    result_path = f"{result_dir}/{model_name}.predict"
+def main(result_path):
     result = pd.read_csv(result_path, sep="\t")
     result["label"] = result["prediction"].map(lambda x: label2idx[x])
-    result[["comments", "label"]].to_csv(f"{kaggle_dir}/{model_name}.csv", index=False)
+    kaggle_output_filename = os.path.basename(result)
+    result[["comments", "label"]].to_csv(f"{kaggle_dir}/{kaggle_output_filename}.csv", index=False)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", help="Path to a config", required=True)
+    parser.add_argument("--result-path", help="Path to a model prediction result", required=True)
     args = parser.parse_args()
 
-    config = OmegaConf.load(args.config)
-    main(config)
+    main(args.result_path)
