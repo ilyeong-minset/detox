@@ -1,5 +1,13 @@
 # DeToxify Korean Hate Speech
 Provides **hate speech detection model** trained on [`kocohub/korean-hate-speech` dataset](https://github.com/kocohub/korean-hate-speech). <br>
+
+model | F1 score
+-- | --
+[`kcbert-base`](https://github.com/Beomi/KcBERT) finetuned | **0.6042**
+[`kobert-base`](https://github.com/SKTBrain/KoBERT) finetuned | 0.5390
+
+- Check out [Kaggle Leaderboard](https://www.kaggle.com/c/korean-hate-speech-detection/leaderboard) to see more scores!
+
 Additionally, `detox` supports users to easily train their own model. Note that only finetuning BERT is provided, yet.
 
 ## Prerequisite
