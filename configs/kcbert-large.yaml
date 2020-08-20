@@ -1,4 +1,4 @@
-model_name: kcbert_large
+model_name: kcbert-large
 
 # If both labels are true, this means bias is an additional context for predicting hate.
 label:
@@ -18,7 +18,7 @@ train_hparams:
     warmup_ratio: 0.1
     adam_epsilon: 1e-8
     max_length: 100
-    verbose: True
+    verbose: 2
 
 checkpoint_dir: checkpoints
 log_dir: logs
