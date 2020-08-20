@@ -17,7 +17,7 @@ $ git lfs pull
 ```
 $ python predict.py --config <config_path> (--koco-test | --filepath <test_file_path>) [--save]
 ```
-- `config` specifies model configuration filepath. e.g., [`configs/kcbert-base.yaml`](configs/kcbert-base.yaml)
+- `config` specifies model configuration filepath. e.g., [`configs/detox.yaml`](configs/detox.yaml)
 - Either `koco-test` or `filepath` is required. 
   - `koco-test` uses [`kocohub/korean-hate-speech` testset](https://github.com/kocohub/korean-hate-speech) as an input.
   - `filepath` uses designated text file as an input. e.g., [`example/example.txt`](example/example.txt)
@@ -28,7 +28,7 @@ $ python predict.py --config <config_path> (--koco-test | --filepath <test_file_
 ```
 $ python finetune_bert.py --config <config_path>
 ```
-- `config` specifies model configuration filepath. e.g., [`configs/kcbert-base.yaml`](configs/kcbert-base.yaml)
+- `config` specifies model configuration filepath. e.g., [`configs/detox.yaml`](configs/detox.yaml)
 
 ### 3. Convert to [Kaggle](https://www.kaggle.com/c/korean-hate-speech-detection) submission format
 ```
