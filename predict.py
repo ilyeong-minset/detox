@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 
 import koco
 import pandas as pd
@@ -8,7 +9,7 @@ import torch.nn.functional as F
 from omegaconf import OmegaConf
 from transformers import BertForSequenceClassification
 
-from utils import get_device_and_ngpus, makedirs
+from utils import get_device_and_ngpus, makedirs, read_lines
 
 logger = logging.getLogger(__name__)
 device, n_gpus = get_device_and_ngpus()
@@ -16,7 +17,7 @@ result_dir = "results"
 makedirs(result_dir)
 
 
-def main(conf, dev, save):
+def main(conf, testfile, save):
     # Load saved data
     checkpoint_path = f"{conf.checkpoint_dir}/{conf.model_name}.pt"
     log_path = f"{conf.log_dir}/{conf.model_name}.log"
@@ -27,18 +28,27 @@ def main(conf, dev, save):
     label2idx = saved_data["classes"]
     idx2label = {idx: label for label, idx in label2idx.items()}
 
-    if dev:
-        test = koco.load_dataset("korean-hate-speech", mode="train_dev")
-        test = test["dev"]
-    elif config.label.hate and config.label.bias:
-        df = pd.read_csv(
-            "korean-hate-speech-dataset/labeled/test.bias.ternary.tsv", sep="\t"
-        )
-        test = []
-        for i, row in df.iterrows():
-            test.append({"comments": row["comments"], "bias": row["label"]})
-    else:
+    if testfile == "koco-test":
         test = koco.load_dataset("korean-hate-speech", mode="test")
+        if config.label.hate and config.label.bias:
+            if os.path.exists(
+                "korean-hate-speech-dataset/labeled/test.bias.ternary.tsv"
+            ):
+                df = pd.read_csv(
+                    "korean-hate-speech-dataset/labeled/test.bias.ternary.tsv", sep="\t"
+                )
+            else:
+                raise NotImplementedError(
+                    "Adding external bias information is not supported, yet"
+                )
+
+            test = []
+            for i, row in df.iterrows():
+                test.append({"comments": row["comments"], "bias": row["label"]})
+    else:
+        test = []
+        for line in read_lines(testfile):
+            test.append({"comments": line})
 
     test_texts = []
     for t in test:
@@ -96,12 +106,16 @@ def main(conf, dev, save):
     # Save!
     if save:
         # Save test comment + predicted label
-        with open(f"{result_dir}/{conf.model_name}.predict", "w") as f:
+        with open(
+            f"{result_dir}/{os.path.basename(testfile)}.{conf.model_name}.predict", "w"
+        ) as f:
             f.write("comments" + "\t" + "prediction" + "\n")
             for test_text, index in zip(test_texts, indices):
                 f.write(test_text + "\t" + idx2label[int(index[0])] + "\n")
         # Save tokenized test comment + predicted label
-        with open(f"{result_dir}/{conf.model_name}.tokens", "w") as f:
+        with open(
+            f"{result_dir}/{os.path.basename(testfile)}.{conf.model_name}.tokens", "w"
+        ) as f:
             f.write("tokens" + "\t" + "prediction" + "\n")
             for token, index in zip(tokens, indices):
                 f.write(" ".join(token) + "\t" + idx2label[int(index[0])] + "\n")
@@ -110,9 +124,17 @@ def main(conf, dev, save):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", help="Path of the config yaml", required=True)
-    parser.add_argument("--dev", action="store_true")
-    parser.add_argument("--save", action="store_true")
+    parser.add_argument("--save", help="Save the prediction", action="store_true")
+
+    input_group = parser.add_mutually_exclusive_group(required=True)
+    input_group.add_argument(
+        "--koco-test",
+        action="store_true",
+        help="Run model on korean-hate-speech testset",
+    )
+    input_group.add_argument("--filepath", help="Run model on given file")
     args = parser.parse_args()
 
+    testfile = "koco-test" if args.koco_test else args.filepath
     config = OmegaConf.load(args.config)
-    main(config, args.dev, args.save)
+    main(config, testfile, args.save)

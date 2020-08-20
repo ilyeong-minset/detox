@@ -50,3 +50,8 @@ def get_device_and_ngpus():
 
 def makedirs(dirpath):
     os.makedirs(dirpath, exist_ok=True)
+
+
+def read_lines(filepath):
+    with open(filepath, encoding="utf-8", mode="r") as f:
+        return f.read().strip().split("\n")
