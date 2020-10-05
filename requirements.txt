@@ -4,3 +4,4 @@ transformers>=3.0.2
 pytorch-ignite>=0.4.1
 koco>=0.2.3
 omegaconf>=2.0.0
+kobert-transformers>=0.4.1
