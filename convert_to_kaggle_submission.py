@@ -19,7 +19,7 @@ label2idx = {
 def main(result_path):
     result = pd.read_csv(result_path, sep="\t")
     result["label"] = result["prediction"].map(lambda x: label2idx[x])
-    kaggle_output_filename = os.path.basename(result)
+    kaggle_output_filename = os.path.basename(result_path)
     result[["comments", "label"]].to_csv(
         f"{kaggle_dir}/{kaggle_output_filename}.csv", index=False
     )
