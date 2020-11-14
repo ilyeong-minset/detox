@@ -1,5 +1,8 @@
 # DeToxify Korean Hate Speech
-Provides **hate speech detection model** trained on [`kocohub/korean-hate-speech` dataset](https://github.com/kocohub/korean-hate-speech). <br>
+Provides **hate speech detection model** trained on [`kocohub/korean-hate-speech` dataset](https://github.com/kocohub/korean-hate-speech): `checkpoints/kcbert-base.pt` <br>
+
+**Updates: 2020-11-14**
+Provides **gender-bias detection model** trained on ['kocohub/korean-hate-speech' dataset](https://github.com/kocohub/korean-hate-speech): `checkpoints/kcbert-base-bias.pt` <br>
 
 model | F1 score
 -- | --
