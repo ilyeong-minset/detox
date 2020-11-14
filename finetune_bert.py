@@ -47,8 +47,8 @@ def main(conf):
         train, label2idx = map_label2idx(train, "hate")
         valid, _ = map_label2idx(valid, "hate")
     elif conf.label.bias:
-        train, label2idx = map_label2idx(train, "bias")
-        valid, _ = map_label2idx(valid, "bias")
+        train, label2idx = map_label2idx(train, "contain_gender_bias")
+        valid, _ = map_label2idx(valid, "contain_gender_bias")
 
     # Use bias as an additional context for predicting hate
     if conf.label.hate and conf.label.bias:

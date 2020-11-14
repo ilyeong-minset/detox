@@ -107,14 +107,14 @@ def main(conf, testfile, save):
         ) as f:
             f.write("comments" + "\t" + "prediction" + "\n")
             for test_text, index in zip(test_texts, indices):
-                f.write(test_text + "\t" + idx2label[int(index[0])] + "\n")
+                f.write(test_text + "\t" + str(idx2label[int(index[0])]) + "\n")
         # Save tokenized test comment + predicted label
         with open(
             f"{result_dir}/{os.path.basename(testfile)}.{conf.model_name}.tokens", "w"
         ) as f:
             f.write("tokens" + "\t" + "prediction" + "\n")
             for token, index in zip(tokens, indices):
-                f.write(" ".join(token) + "\t" + idx2label[int(index[0])] + "\n")
+                f.write(" ".join(token) + "\t" + str(idx2label[int(index[0])]) + "\n")
 
 
 if __name__ == "__main__":
