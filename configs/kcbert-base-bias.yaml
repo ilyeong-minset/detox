@@ -1,4 +1,4 @@
-model_name: kcbert-base
+model_name: kcbert-base-bias
 
 # If both labels are true, this means bias is an additional context for predicting hate.
 label:
